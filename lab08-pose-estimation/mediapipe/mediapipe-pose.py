@@ -11,21 +11,30 @@ pose = mp_pose.Pose(static_image_mode=False,
                     model_complexity=2,
                     enable_segmentation=False,
                     min_detection_confidence=0.5)
-videos = ['../media/yoga']
+videos = ['far-away']
 
 for i in range(len(videos)):
-	file_name = videos[i] + '.mp4'
-	path = 'Media/New/' + file_name
+    file_name = videos[i] + ".mp4"
+    path = "../media/far-away.mp4"
 
-	cap = cv2.VideoCapture(path)
-	fps = int(cap.get(cv2.CAP_PROP_FPS))
+    cap = cv2.VideoCapture(path)
 
-	ret, frame = cap.read()
-	h,w,c = frame.shape
+    # Check if video opened
+    if not cap.isOpened():
+        print("Error: Cannot open video")
+        exit()
 
-	out = cv2.VideoWriter(file_name, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
 
-	while True:
+    ret, frame = cap.read()
+    h, w, c = frame.shape
+
+    out = cv2.VideoWriter(file_name,
+                          cv2.VideoWriter_fourcc(*"mp4v"),
+                          fps,
+                          (w, h))
+print(path)
+while True:
 		ret, frame = cap.read()
 
 		if not ret:
@@ -39,7 +48,7 @@ for i in range(len(videos)):
 		t1 = time.time()
 		results = pose.process(img)
 		# print(dir(results))
-		print(dir(results.index.__sizeof__))
+	
 		t2 = time.time()
 
 		fps_org = 1/(t2 - t1)
@@ -62,5 +71,5 @@ for i in range(len(videos)):
 
 		if key == ord('q'):
 			break
-	cap.release()
-	cv2.destroyAllWindows()
+cap.release()
+cv2.destroyAllWindows()
